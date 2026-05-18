@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-brand-primary: #2e7d32;
+  --color-brand-primary-light: #66bb6a;
+  --color-brand-accent: #f9a825;
+  --color-brand-cream: #fffdf7;
+  --color-brand-earth: #795548;
+  --color-brand-black: #222222;
+  --color-brand-soft: #f8f5ef;
+
+  /* Fonts */
+  --font-hind: var(--font-hind-siliguri), system-ui, sans-serif;
+  --font-noto: var(--font-noto-bengali), system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-premium: 0 10px 30px -10px rgba(46, 125, 50, 0.15);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+
+  /* Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-reveal: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+:root {
+  --background: #fffdf7;
+  --foreground: #222222;
+}
+
+body {
+  background-color: var(--color-brand-cream);
+  color: var(--color-brand-black);
+  font-family: var(--font-hind);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism Utility */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(34, 34, 34, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Luxury Gradient */
+.gradient-organic {
+  background: linear-gradient(135deg, #66bb6a 0%, #2e7d32 100%);
+}
+
+.gradient-mango {
+  background: linear-gradient(135deg, #f9a825 0%, #ef6c00 100%);
+}
