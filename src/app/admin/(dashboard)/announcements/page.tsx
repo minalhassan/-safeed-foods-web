@@ -2,6 +2,8 @@ import React from "react";
 import { getAnnouncement } from "@/lib/actions/announcement";
 import AnnouncementForm from "./AnnouncementForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function AnnouncementsPage() {
   const announcement = await getAnnouncement();
 

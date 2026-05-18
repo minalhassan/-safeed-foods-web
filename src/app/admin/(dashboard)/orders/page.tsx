@@ -8,6 +8,8 @@ import StatusSelect from "./StatusSelect";
 import DeleteOrderButton from "./DeleteOrderButton";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminOrdersPage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get("user_id")?.value;

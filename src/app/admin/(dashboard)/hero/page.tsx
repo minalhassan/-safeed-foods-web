@@ -2,6 +2,8 @@ import React from "react";
 import { getHeroSlides } from "@/lib/actions/hero";
 import HeroSlidesForm from "./HeroSlidesForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminHeroPage() {
   const slides = await getHeroSlides();
 

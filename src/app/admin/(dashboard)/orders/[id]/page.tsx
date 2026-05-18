@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, Package, User, MapPin, Phone, CreditCard, Clock } from "lucide-react";
 import StatusSelect from "../StatusSelect";
 
+export const dynamic = "force-dynamic";
+
 export default async function OrderDetailsPage({ params }: { params: { id: string } }) {
   const { id } = await params;
   const supabase = await createClient();

@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import UsersList from "./UsersList";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminUsersPage() {
   const cookieStore = await cookies();
   const userId = cookieStore.get("user_id")?.value;
