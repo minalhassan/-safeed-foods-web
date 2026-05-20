@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import ProductCard from "@/components/ui/product-card";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, SlidersHorizontal, ArrowUpDown, Tag } from "lucide-react";
+import { Search, SlidersHorizontal, ArrowUpDown, Tag, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Category {
@@ -36,9 +36,33 @@ interface ProductsClientProps {
 }
 
 export default function ProductsClient({ initialProducts, categories }: ProductsClientProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const catParam = searchParams.get("category");
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("default");
+
+  // Sync selectedCategory with url query parameter
+  useEffect(() => {
+    if (catParam) {
+      setSelectedCategory(catParam);
+    } else {
+      setSelectedCategory("all");
+    }
+  }, [catParam]);
+
+  const handleCategorySelect = (id: string) => {
+    setSelectedCategory(id);
+    const params = new URLSearchParams(window.location.search);
+    if (id === "all") {
+      params.delete("category");
+    } else {
+      params.set("category", id);
+    }
+    router.push(`/products?${params.toString()}`, { scroll: false });
+  };
 
   // 1. Filter and sort products dynamically
   const filteredProducts = useMemo(() => {
@@ -73,7 +97,6 @@ export default function ProductsClient({ initialProducts, categories }: Products
 
   return (
     <main className="min-h-screen bg-brand-soft/30 flex flex-col font-hind">
-      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-36 pb-20 bg-white border-b border-brand-black/5 overflow-hidden">
@@ -117,36 +140,50 @@ export default function ProductsClient({ initialProducts, categories }: Products
               </div>
             </div>
 
-            {/* Categories Selector */}
-            <div className="space-y-3">
+            {/* Categories Selector (Desktop Only) */}
+            <div className="hidden lg:block space-y-3">
               <h3 className="font-bold text-brand-black text-sm uppercase tracking-wider">ক্যাটাগরি</h3>
               <div className="flex flex-col gap-2">
                 <button
-                  onClick={() => setSelectedCategory("all")}
+                  onClick={() => handleCategorySelect("all")}
                   className={cn(
-                    "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all text-left",
+                    "flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all text-left border",
                     selectedCategory === "all"
-                      ? "bg-brand-primary text-white shadow-md"
-                      : "bg-brand-soft text-brand-black/70 hover:bg-brand-soft/80"
+                      ? "bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20 scale-[1.02]"
+                      : "bg-white text-brand-black/70 border-brand-black/5 hover:border-brand-primary/20 hover:bg-brand-soft/50"
                   )}
                 >
-                  <span>সব ক্যাটাগরি</span>
-                  <Tag size={14} className={selectedCategory === "all" ? "opacity-100" : "opacity-35"} />
+                  <div className={cn(
+                    "w-8 h-8 rounded-full flex items-center justify-center shrink-0 border transition-colors",
+                    selectedCategory === "all"
+                      ? "bg-white/20 border-white/10 text-white"
+                      : "bg-brand-primary/5 border-brand-primary/10 text-brand-primary"
+                  )}>
+                    <LayoutGrid size={16} />
+                  </div>
+                  <span className="flex-1">সব ক্যাটাগরি</span>
                 </button>
 
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => handleCategorySelect(cat.id)}
                     className={cn(
-                      "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all text-left",
+                      "flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all text-left border",
                       selectedCategory === cat.id
-                        ? "bg-brand-primary text-white shadow-md"
-                        : "bg-brand-soft text-brand-black/70 hover:bg-brand-soft/80"
+                        ? "bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20 scale-[1.02]"
+                        : "bg-white text-brand-black/70 border-brand-black/5 hover:border-brand-primary/20 hover:bg-brand-soft/50"
                     )}
                   >
-                    <span>{cat.name}</span>
-                    <Tag size={14} className={selectedCategory === cat.id ? "opacity-100" : "opacity-35"} />
+                    <div className="w-8 h-8 rounded-full bg-brand-soft overflow-hidden relative shrink-0 border border-brand-black/10">
+                      <Image
+                        src={cat.image || "/mango.png"}
+                        alt={cat.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className="flex-1">{cat.name}</span>
                   </button>
                 ))}
               </div>
@@ -174,6 +211,50 @@ export default function ProductsClient({ initialProducts, categories }: Products
           {/* Product Grid Area */}
           <div className="flex-1 w-full space-y-6">
             
+            {/* Horizontal Category Bar (Mobile/Tablet Only) */}
+            <div 
+              className="lg:hidden w-full overflow-x-auto pb-2 -mx-4 px-4"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              <div className="flex gap-3 min-w-max py-2">
+                <button
+                  onClick={() => handleCategorySelect("all")}
+                  className={cn(
+                    "flex items-center gap-2 px-5 py-3 rounded-full text-xs font-bold transition-all border shrink-0",
+                    selectedCategory === "all"
+                      ? "bg-brand-primary text-white border-brand-primary shadow-md shadow-brand-primary/20"
+                      : "bg-white text-brand-black/70 border-brand-black/5 hover:bg-brand-soft"
+                  )}
+                >
+                  <LayoutGrid size={14} />
+                  <span>সব ক্যাটাগরি</span>
+                </button>
+
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleCategorySelect(cat.id)}
+                    className={cn(
+                      "flex items-center gap-2 px-5 py-3 rounded-full text-xs font-bold transition-all border shrink-0",
+                      selectedCategory === cat.id
+                        ? "bg-brand-primary text-white border-brand-primary shadow-md shadow-brand-primary/20"
+                        : "bg-white text-brand-black/70 border-brand-black/5 hover:bg-brand-soft"
+                    )}
+                  >
+                    <div className="w-5 h-5 rounded-full bg-brand-soft overflow-hidden relative shrink-0 border border-brand-black/5">
+                      <Image
+                        src={cat.image || "/mango.png"}
+                        alt={cat.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <span>{cat.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Header info */}
             <div className="flex items-center justify-between px-4">
               <p className="text-brand-black/40 text-sm font-medium">
@@ -221,8 +302,6 @@ export default function ProductsClient({ initialProducts, categories }: Products
           </div>
         </div>
       </section>
-
-      <Footer />
     </main>
   );
 }

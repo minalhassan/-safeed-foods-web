@@ -63,7 +63,7 @@ export default function Hero() {
   if (!slides || slides.length === 0) return null;
 
   return (
-    <section className="relative h-screen min-h-[800px] w-full overflow-hidden flex flex-col">
+    <section className="relative h-screen min-h-[600px] md:min-h-[800px] w-full overflow-hidden flex flex-col">
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
@@ -80,11 +80,12 @@ export default function Hero() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-black/80 via-brand-black/40 to-transparent z-10" />
+          {/* Dark Overlay - Uniform black at 60% on mobile, right-fading gradient on desktop */}
+          <div className="absolute inset-0 bg-brand-black/60 md:bg-gradient-to-r md:from-brand-black/80 md:via-brand-black/40 md:to-transparent z-10" />
         </motion.div>
       </AnimatePresence>
 
-      <div className="relative z-20 flex-1 max-w-7xl mx-auto px-4 md:px-8 flex flex-col justify-center items-start pt-20">
+      <div className="relative z-20 flex-1 max-w-7xl mx-auto px-4 md:px-8 flex flex-col justify-center items-start pt-28 md:pt-20">
         <div className="max-w-2xl space-y-6 md:space-y-10">
           <motion.div
             key={`title-${current}`}
@@ -96,7 +97,10 @@ export default function Hero() {
             <span className="inline-block px-4 py-2 rounded-full bg-brand-primary/20 text-brand-primary-light border border-brand-primary/30 text-xs font-bold tracking-widest uppercase font-hind">
               Premium Organic Foods
             </span>
-            <h1 className="text-4xl md:text-7xl font-bold text-white font-noto leading-[1.1] tracking-tight">
+            <h1 
+              className="text-4xl md:text-7xl font-bold text-white font-noto leading-[1.1] tracking-tight"
+              style={{ textShadow: "0 4px 16px rgba(0, 0, 0, 0.4)" }}
+            >
               {slides[current]?.title}
             </h1>
           </motion.div>
@@ -107,6 +111,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-lg md:text-2xl text-white/90 font-hind font-medium leading-relaxed max-w-xl"
+            style={{ textShadow: "0 2px 10px rgba(0, 0, 0, 0.4)" }}
           >
             {slides[current]?.subtitle}
           </motion.p>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,26 +16,19 @@ export async function POST(req: NextRequest) {
     const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const uniqueName = `${Date.now()}-${cleanName}`;
 
-    // Check if we have Supabase Service Role Key to upload to Supabase Storage
-    const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
+                        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 
+                        process.env.SUPABASE_ANON_KEY || 
+                        process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (hasServiceKey) {
-      const supabase = createAdminClient();
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
       
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      // 1. Try to ensure the 'uploads' bucket exists and is public
-      try {
-        await supabase.storage.createBucket('uploads', {
-          public: true,
-          fileSizeLimit: 5242880, // 5MB
-        });
-      } catch (bucketError) {
-        // Ignore "already exists" error
-      }
-
-      // 2. Upload the file to the 'uploads' bucket
+      // Upload the file to the 'uploads' bucket directly using the anon/service key
       const { data: uploadData, error: uploadError } = await supabase
         .storage
         .from('uploads')
@@ -48,7 +41,7 @@ export async function POST(req: NextRequest) {
         throw uploadError;
       }
 
-      // 3. Get the public URL of the uploaded file
+      // Get the public URL of the uploaded file
       const { data: { publicUrl } } = supabase
         .storage
         .from('uploads')
@@ -59,8 +52,8 @@ export async function POST(req: NextRequest) {
         url: publicUrl,
       });
     } else {
-      // Fallback for local development if SUPABASE_SERVICE_ROLE_KEY is not defined
-      console.log("⚠️ SUPABASE_SERVICE_ROLE_KEY not found. Falling back to local disk upload.");
+      // Fallback for local development if no credentials at all are found (unlikely)
+      console.log("⚠️ No Supabase credentials found in environment. Falling back to local disk upload.");
       
       const { writeFile, mkdir } = await import("fs/promises");
       const { join } = await import("path");

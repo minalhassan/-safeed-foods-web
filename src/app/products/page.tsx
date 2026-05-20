@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import ProductsClient from "./ProductsClient";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -26,9 +27,18 @@ export default async function ProductsPage() {
   const categories = categoriesData || [];
 
   return (
-    <ProductsClient 
-      initialProducts={products as any}
-      categories={categories as any}
-    />
+    <Suspense fallback={
+      <div className="min-h-screen bg-brand-soft/30 flex items-center justify-center font-hind">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-brand-primary border-t-transparent"></div>
+          <p className="text-brand-black/50 font-medium">লোড হচ্ছে...</p>
+        </div>
+      </div>
+    }>
+      <ProductsClient 
+        initialProducts={products as any}
+        categories={categories as any}
+      />
+    </Suspense>
   );
 }

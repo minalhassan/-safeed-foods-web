@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { ShoppingCart, Phone, Star, ShieldCheck, Truck, RefreshCw, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -62,8 +60,6 @@ export default function ProductPage() {
 
   return (
     <main className="min-h-screen bg-brand-soft/30">
-      <Navbar />
-      
       <div className="pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto font-hind">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Gallery Side */}
@@ -198,8 +194,6 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }

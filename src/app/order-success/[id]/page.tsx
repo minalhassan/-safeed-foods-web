@@ -2,8 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { CheckCircle, Package, ArrowRight, Home } from "lucide-react";
 import { use } from "react";
@@ -13,8 +11,6 @@ export default function OrderSuccessPage({ params }: { params: Promise<{ id: str
 
   return (
     <main className="min-h-screen bg-brand-soft/30 flex flex-col">
-      <Navbar />
-      
       <div className="flex-1 flex items-center justify-center pt-32 pb-20 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -64,8 +60,6 @@ export default function OrderSuccessPage({ params }: { params: Promise<{ id: str
           </div>
         </motion.div>
       </div>
-
-      <Footer />
     </main>
   );
 }

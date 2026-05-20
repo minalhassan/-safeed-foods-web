@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Navbar from "@/components/layout/navbar";
-import Footer from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { MapPin, Phone, User, CreditCard, ShoppingBag, ShieldCheck, Trash2, Plus, Minus } from "lucide-react";
 import Image from "next/image";
@@ -82,7 +80,6 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <main className="min-h-screen bg-brand-soft/30 flex items-center justify-center pt-20">
-        <Navbar />
         <div className="text-center space-y-6 p-8">
           <div className="w-24 h-24 bg-brand-soft rounded-full flex items-center justify-center mx-auto text-brand-black/20">
             <ShoppingBag size={48} />
@@ -98,8 +95,6 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-brand-soft/30">
-      <Navbar />
-      
       <div className="pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto font-hind">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Form Side */}
@@ -321,8 +316,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </main>
   );
 }

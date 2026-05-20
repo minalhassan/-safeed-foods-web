@@ -4,10 +4,11 @@ import FarmStory from "@/components/home/farm-story";
 import Testimonials from "@/components/home/testimonials";
 import Newsletter from "@/components/home/newsletter";
 import Statistics from "@/components/home/statistics";
-import AnnouncementBar from "@/components/layout/announcement-bar";
+import CategoriesSection from "@/components/home/categories";
 import ScrollToTop from "@/components/ui/scroll-to-top";
 import { Phone } from "lucide-react";
 import { getStoreSettings } from "@/lib/actions/settings";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +16,44 @@ export default async function HomePage() {
   const store = await getStoreSettings();
   const whatsapp = store?.whatsapp || "8801570262860";
 
+  // Fetch categories and map counts
+  let categories: any[] = [];
+  try {
+    const supabase = await createClient();
+    
+    // Fetch categories ordered by name
+    const { data: categoriesData } = await supabase
+      .from("Category")
+      .select("*")
+      .order("name", { ascending: true });
+
+    // Fetch product category IDs to aggregate counts
+    const { data: productsData } = await supabase
+      .from("Product")
+      .select("categoryId");
+
+    const categoryCounts = (productsData || []).reduce((acc: Record<string, number>, p: any) => {
+      if (p.categoryId) {
+        acc[p.categoryId] = (acc[p.categoryId] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    categories = (categoriesData || []).map((cat: any) => ({
+      ...cat,
+      productCount: categoryCounts[cat.id] || 0,
+    }));
+  } catch (error) {
+    console.error("Database connection error in HomePage category fetch:", error);
+    categories = [];
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex-1">
         <Hero />
         <Statistics />
+        <CategoriesSection categories={categories} />
         <FeaturedProducts />
         <FarmStory />
         <Testimonials />

@@ -88,8 +88,8 @@ export default function Footer() {
             </h3>
             <ul className="space-y-4 text-white/60">
               {[
-                { name: "পণ্যসমূহ", href: "/#products" },
-                { name: "ক্যাটাগরি", href: "/#products" },
+                { name: "পণ্যসমূহ", href: "/products" },
+                { name: "ক্যাটাগরি", href: "/#categories" },
                 { name: "আমাদের সম্পর্কে", href: "/#about" },
                 { name: "গ্রাহক রিভিউ", href: "/#reviews" },
                 { name: "যোগাযোগ", href: "/#about" }
@@ -176,7 +176,7 @@ export default function Footer() {
             data-contact="minalhasan2@gmail.com"
           >
             Crafted by 
-            <a href="https://github.com/minalhassan" target="_blank" rel="noopener noreferrer" className="text-brand-primary-light hover:underline">Md.Minal Hasan Raj Mim</a>
+            <a href="https://www.facebook.com/share/1BouqCGRYv/" target="_blank" rel="noopener noreferrer" className="text-brand-primary-light hover:underline">Md.Minal Hasan Raj Mim</a>
           </p>
         </div>
       </div>
