@@ -102,7 +102,7 @@ export default function Navbar() {
             size={44}
             className="transition-all duration-300 hover:scale-105"
           />
-          <span className="hidden sm:inline-block font-bold text-brand-black tracking-wide text-xl font-noto">
+          <span className="font-bold text-brand-black tracking-wide text-base sm:text-xl font-noto">
             SAFEED FOODS
           </span>
         </Link>
